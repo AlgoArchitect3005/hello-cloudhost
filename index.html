@@ -1,62 +1,244 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker Test Page</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        h1 {
-            color: #2496ed;
-        }
-
-        p {
-            color: #555;
-            font-size: 18px;
-        }
-
-        .status {
-            margin-top: 20px;
-            padding: 12px;
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker Test Page</title>
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#0d2438;--mute:#5b6e80;--line:#d8e0e8;--blue:#1d63ed;--ok:#17a05d;--bad:#d64545;--warn:#c98a0b;--code:#0d2438;--codeink:#d6e6f5}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1622;--card:#12222f;--ink:#e6eef6;--mute:#8ea2b5;--line:#22374a;--blue:#5b9bff;--ok:#3ecf86;--bad:#ff6b6b;--warn:#f0b429;--code:#07111a;--codeink:#cfe3f5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.mono,code,pre,td.v,input,select,textarea{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+main{max-width:1000px;margin:0 auto;padding:28px 16px 60px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+h1{margin:0;font-size:26px;letter-spacing:-.02em}
+h1 small{display:block;font-size:14px;font-weight:400;color:var(--mute);letter-spacing:0;margin-top:2px}
+h2{margin:0 0 12px;font-size:16px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--mute)}
+.up .dot{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 25%,transparent)}
+.down .dot{background:var(--bad);box-shadow:0 0 0 4px color-mix(in srgb,var(--bad) 25%,transparent)}
+.up{color:var(--ok)}.down{color:var(--bad)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.card.wide{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+td{padding:5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.k{color:var(--mute);width:38%;padding-right:10px}
+td.v{word-break:break-all}
+.strip{display:flex;align-items:flex-end;gap:3px;height:64px;padding:6px;background:var(--bg);border-radius:6px;margin:10px 0}
+.strip i{flex:1;min-width:3px;background:var(--ok);border-radius:2px 2px 0 0;min-height:4px}
+.strip i.f{background:var(--bad);height:100%!important;opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.stats b{display:block;font-size:19px}.stats span{font-size:12.5px;color:var(--mute)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+input,select,textarea{padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:13.5px}
+input{flex:1;min-width:160px}
+button{padding:8px 14px;border:0;border-radius:6px;background:var(--blue);color:#fff;font:600 13.5px system-ui,sans-serif;cursor:pointer}
+button.ghost{background:transparent;color:var(--blue);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+pre{margin:0;padding:12px;background:var(--code);color:var(--codeink);border-radius:6px;overflow:auto;font-size:12.5px;max-height:240px;white-space:pre-wrap;word-break:break-all}
+.cmd{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.cmd:last-child{border-bottom:0}
+.cmd div{flex:1;min-width:0}
+.cmd code{display:block;font-size:13px;word-break:break-all}
+.cmd span{font-size:12.5px;color:var(--mute)}
+.cmd button{padding:5px 10px;font-size:12.5px}
+.tag{font-size:12px;padding:1px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+ul{margin:0;padding-left:18px}li{margin:6px 0}
+.hint{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+@media(prefers-reduced-motion:no-preference){.strip i{transition:height .25s}}
+</style>
 </head>
-
 <body>
+<main>
+<header>
+  <h1>Docker Test Page<small>Served from a container. Check the connection, watch health live, and test endpoints.</small></h1>
+  <div id="status" class="pill"><span class="dot"></span><span id="statusText">Checking…</span></div>
+</header>
 
-    <div class="container">
-        <h1>🐳 Docker Test Page</h1>
+<div class="grid">
+  <section class="card">
+    <h2>Connection</h2>
+    <table id="conn"></table>
+    <p class="hint">If you can read this, the port mapping and the web server inside the container both work.</p>
+  </section>
 
-        <p>Hello from inside a Docker container!</p>
-
-        <div class="status">
-            ✅ Container is running successfully
-        </div>
+  <section class="card">
+    <h2>Health monitor</h2>
+    <div class="stats">
+      <div><b id="sLast">–</b><span>last (ms)</span></div>
+      <div><b id="sAvg">–</b><span>average</span></div>
+      <div><b id="sMax">–</b><span>slowest</span></div>
+      <div><b id="sOk">–</b><span>success</span></div>
     </div>
+    <div class="strip" id="strip" aria-label="Recent response times"></div>
+    <div class="row">
+      <select id="interval" aria-label="Check interval">
+        <option value="1000">Every 1s</option><option value="3000" selected>Every 3s</option><option value="10000">Every 10s</option>
+      </select>
+      <button id="pause" class="ghost">Pause</button>
+      <button id="reset" class="ghost">Reset</button>
+    </div>
+    <p class="hint">Run <code>docker stop docker-test</code> and the bars turn red. Run <code>docker start docker-test</code> and they recover.</p>
+  </section>
 
+  <section class="card">
+    <h2>Server response</h2>
+    <table id="hdrs"><tr><td class="k">Loading…</td></tr></table>
+    <p class="hint" id="hdrHint"></p>
+  </section>
+
+  <section class="card">
+    <h2>Browser</h2>
+    <table id="env"></table>
+  </section>
+</div>
+
+<section class="card wide" style="margin-bottom:16px">
+  <h2>Endpoint tester</h2>
+  <div class="row">
+    <select id="method"><option>GET</option><option>HEAD</option><option>POST</option><option>PUT</option><option>DELETE</option></select>
+    <input id="url" value="/" aria-label="URL or path" spellcheck="false">
+    <button id="send">Send request</button>
+  </div>
+  <textarea id="body" rows="2" style="width:100%;margin-bottom:10px;display:none" placeholder='Request body, e.g. {"name":"test"}'></textarea>
+  <div class="row" id="resMeta" style="align-items:center"></div>
+  <pre id="res">Send a request to see the status, timing, headers and body here. Try a path like /api/health, or a full URL for another container.</pre>
+  <p class="hint">Requests to another origin (another port or container) need CORS enabled on that service, otherwise the browser blocks the response.</p>
+</section>
+
+<div class="grid">
+  <section class="card">
+    <h2>Docker commands</h2>
+    <div id="cmds"></div>
+  </section>
+  <section class="card">
+    <h2>If something is not working</h2>
+    <ul>
+      <li><b>Page won't load:</b> check <code>docker ps</code> shows the container as Up and the port is mapped as <code>host:container</code>, for example <code>8080:80</code>.</li>
+      <li><b>Connection reset:</b> the app must listen on <code>0.0.0.0</code>, not <code>127.0.0.1</code>, inside the container.</li>
+      <li><b>403 or 404 from nginx:</b> files must be in <code>/usr/share/nginx/html</code> and the file must be named <code>index.html</code>.</li>
+      <li><b>Old page after an edit:</b> rebuild the image, or mount the folder as a volume. Then hard refresh with Ctrl+Shift+R.</li>
+      <li><b>Container exits at once:</b> read <code>docker logs docker-test</code> for the error.</li>
+      <li><b>Spring Boot or API container:</b> use the tester above on <code>/actuator/health</code> or your own endpoint.</li>
+    </ul>
+  </section>
+</div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const rows=(el,data)=>el.innerHTML=data.map(([k,v])=>`<tr><td class="k">${esc(k)}</td><td class="v">${esc(v)}</td></tr>`).join('');
+const port=location.port||(location.protocol==='https:'?'443':'80');
+const loadedAt=new Date();
+
+// Connection
+rows($('conn'),[
+  ['Host',location.hostname||'(file)'],['Port',port],['Protocol',location.protocol.replace(':','')],
+  ['Path',location.pathname],['Full URL',location.href],['Page loaded',loadedAt.toLocaleTimeString()]
+]);
+
+// Browser
+const c=navigator.connection;
+rows($('env'),[
+  ['Online',navigator.onLine?'yes':'no'],['Language',navigator.language],
+  ['Screen',`${screen.width}×${screen.height} @${devicePixelRatio}x`],
+  ['Time zone',Intl.DateTimeFormat().resolvedOptions().timeZone],
+  ['Network',c?`${c.effectiveType||'?'} (${c.downlink||'?'} Mbps)`:'not reported'],
+  ['User agent',navigator.userAgent]
+]);
+
+// Server response headers
+async function loadHeaders(){
+  try{
+    const t=performance.now();
+    const r=await fetch(location.pathname+'?_='+Date.now(),{method:'HEAD',cache:'no-store'});
+    const ms=Math.round(performance.now()-t);
+    const h=Object.fromEntries(r.headers.entries());
+    const list=[['Status',`${r.status} ${r.statusText}`],['Response time',ms+' ms']];
+    ['server','content-type','content-length','last-modified','etag','cache-control','x-served-by','date'].forEach(k=>{if(h[k])list.push([k,h[k]])});
+    rows($('hdrs'),list);
+    $('hdrHint').innerHTML=h['x-served-by']
+      ?`Container ID: <b>${esc(h['x-served-by'])}</b>`
+      :'Default nginx does not send the container ID. Run <code>docker ps</code> to see it.';
+  }catch(e){rows($('hdrs'),[['Error',e.message]])}
+}
+loadHeaders();
+
+// Health monitor
+let hist=[],timer,paused=false;
+const MAX=40;
+async function check(){
+  const t=performance.now();let ok=false,ms=0;
+  try{
+    const r=await fetch(location.pathname+'?_='+Date.now(),{method:'HEAD',cache:'no-store'});
+    ms=Math.round(performance.now()-t);ok=r.ok;
+  }catch(e){}
+  hist.push({ok,ms});if(hist.length>MAX)hist.shift();
+  render(ok);
+}
+function render(ok){
+  const st=$('status');st.className='pill '+(ok?'up':'down');
+  $('statusText').textContent=ok?'Container is running':'Container is not responding';
+  const good=hist.filter(h=>h.ok),peak=Math.max(20,...good.map(h=>h.ms));
+  $('strip').innerHTML=hist.map(h=>h.ok?`<i style="height:${Math.max(6,h.ms/peak*100)}%" title="${h.ms} ms"></i>`:`<i class="f" title="failed"></i>`).join('');
+  const last=hist[hist.length-1];
+  $('sLast').textContent=last.ok?last.ms:'fail';
+  $('sAvg').textContent=good.length?Math.round(good.reduce((a,b)=>a+b.ms,0)/good.length):'–';
+  $('sMax').textContent=good.length?Math.max(...good.map(h=>h.ms)):'–';
+  $('sOk').textContent=Math.round(good.length/hist.length*100)+'%';
+}
+function start(){clearInterval(timer);timer=setInterval(check,+$('interval').value)}
+$('interval').onchange=start;
+$('pause').onclick=e=>{paused=!paused;paused?clearInterval(timer):start();e.target.textContent=paused?'Resume':'Pause'};
+$('reset').onclick=()=>{hist=[];check()};
+check();start();
+
+// Endpoint tester
+$('method').onchange=()=>$('body').style.display=['POST','PUT'].includes($('method').value)?'block':'none';
+$('send').onclick=async()=>{
+  const method=$('method').value,url=$('url').value.trim()||'/';
+  const opt={method,cache:'no-store'};
+  if(['POST','PUT'].includes(method)&&$('body').value){opt.body=$('body').value;opt.headers={'Content-Type':'application/json'}}
+  $('res').textContent='Sending…';$('resMeta').innerHTML='';
+  const t=performance.now();
+  try{
+    const r=await fetch(url,opt);const ms=Math.round(performance.now()-t);
+    const text=method==='HEAD'?'':await r.text();
+    const col=r.ok?'var(--ok)':r.status>=500?'var(--bad)':'var(--warn)';
+    $('resMeta').innerHTML=`<b style="color:${col}">${r.status} ${esc(r.statusText)}</b><span class="tag">${ms} ms</span><span class="tag">${text.length} bytes</span>`;
+    const hdr=[...r.headers.entries()].map(([k,v])=>`${k}: ${v}`).join('\n');
+    $('res').textContent=hdr+(text?'\n\n'+text.slice(0,3000)+(text.length>3000?'\n… (truncated)':''):'');
+  }catch(e){
+    $('resMeta').innerHTML='<b style="color:var(--bad)">Request failed</b>';
+    $('res').textContent='The request did not complete. Possible causes:\n- the container is stopped or the port is wrong\n- the other service blocks cross-origin requests (CORS)\n- the URL is invalid\n\n'+e.message;
+  }
+};
+$('url').onkeydown=e=>{if(e.key==='Enter')$('send').click()};
+
+// Commands
+const cmds=[
+  ['Build the image','docker build -t docker-test .'],
+  ['Run this container',`docker run -d --name docker-test -p ${port}:80 docker-test`],
+  ['Run with live file editing (mount current folder)',`docker run -d --name docker-test -p ${port}:80 -v "$(pwd)":/usr/share/nginx/html:ro nginx`],
+  ['See running containers','docker ps'],
+  ['Follow the logs','docker logs -f docker-test'],
+  ['Open a shell inside','docker exec -it docker-test sh'],
+  ['Watch CPU and memory','docker stats docker-test'],
+  ['Show IP, mounts and ports','docker inspect docker-test'],
+  ['Stop, then start again','docker stop docker-test && docker start docker-test'],
+  ['Remove the container','docker rm -f docker-test']
+];
+$('cmds').innerHTML=cmds.map(([d,c],i)=>`<div class="cmd"><div><span>${esc(d)}</span><code>${esc(c)}</code></div><button class="ghost" data-i="${i}">Copy</button></div>`).join('');
+$('cmds').onclick=async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  try{await navigator.clipboard.writeText(cmds[b.dataset.i][1]);b.textContent='Copied'}catch(_){b.textContent='Select text'}
+  setTimeout(()=>b.textContent='Copy',1200);
+};
+</script>
 </body>
 </html>
-
