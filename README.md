@@ -73,10 +73,6 @@ Remove the image:
 docker rmi docker-test
 ```
 
-```bash
-hekloo commou
-```
-
 ## 🛠️ Technologies Used
 
 * HTML
